@@ -1,0 +1,101 @@
+imdbId,title,releaseYear,runtime,rating,numberOfVotes
+1,Carmencita,1894,1,5.6,1648
+2,"Le clown et ses chiens",1892,5,6.1,198
+3,"Pauvre Pierrot",1892,4,6.5,1352
+4,"Un bon bock",1892,12,6.2,120
+5,"Blacksmith Scene",1893,1,6.2,2139
+6,"Chinese Opium Den",1894,1,5.3,115
+7,"Corbett and Courtney Before the Kinetograph",1894,1,5.5,656
+8,"Edison Kinetoscopic Record of a Sneeze",1894,1,5.4,1817
+9,"Miss Jerry",1894,45,5.9,155
+10,"La sortie de l'usine Lumière à Lyon",1895,1,6.9,6043
+11,"Akrobatisches Potpourri",1895,1,5.2,266
+12,"L'arrivée d'un train à La Ciotat",1896,1,7.4,10344
+13,"Neuville-sur-Saône: Débarquement du congrès des photographes à Lyon",1895,1,5.7,1575
+14,"L'arroseur arrosé",1895,1,7.1,4622
+15,"Autour d'une cabine",1894,2,6.1,818
+16,"Barque sortant du port",1895,1,5.9,1207
+17,"Italienischer Bauerntanz",1895,1,4.6,242
+18,"Das boxende Känguruh",1895,1,5.3,480
+19,"The Clown Barber",1898,1,5.3,20
+20,"The Derby 1895",1895,1,5,268
+22,"Les forgerons",1895,1,5.1,892
+23,"Baignade en mer",1895,1,5.7,1146
+24,"Opening of the Kiel Canal",1895,1,4.5,53
+25,"The Oxford and Cambridge University Boat Race",1895,1,4.2,29
+26,"Partie d'écarté",1896,1,5.7,1314
+27,"Place des Cordeliers à Lyon",1895,1,5.6,928
+28,"La pêche aux poissons rouges",1895,1,5.1,858
+29,"Repas de bébé",1895,1,5.9,2863
+30,"Rough Sea at Dover",1895,1,5.2,689
+31,"Le saut à la couverture",1895,1,5.5,839
+32,"Die Serpentintänzerin",1895,1,5.1,340
+33,"La voltige",1895,1,5.6,858
+34,"Arrivée d'un train gare de Vincennes",1896,1,5.3,133
+35,L'arroseur,1896,1,5.6,59
+36,"Awakening of Rip",1896,0,4.4,491
+37,"Baignade en mer",1896,1,4.7,43
+38,"The Ball Game",1898,1,4.1,150
+39,"Barnet Horse Fair",1896,1,3.7,15
+40,"Barque sortant du port de Trouville",1896,1,4.3,40
+41,"Bataille de neige",1897,1,6.6,1437
+42,"Bateau-mouche sur la Seine",1896,1,4.8,24
+43,"Batteuse à vapeur",1896,1,4,15
+44,"Le bivouac",1896,1,4.7,30
+45,"Les blanchisseuses",1896,1,4.9,19
+46,"Bois de Boulogne",1896,1,4.6,19
+47,"Boulevard des Italiens",1896,1,4,18
+48,"The Boxing Kangaroo",1896,1,4.8,129
+49,"Boxing Match; or, Glove Contest",1896,1,5.4,25
+50,"Bébé et fillettes",1896,1,4.5,16
+51,"Campement de bohémiens",1896,1,4.2,17
+52,"Carga de rurales",1896,1,4.5,62
+53,"A Chegada do Comboio Inaugural à Estação Central do Porto",1897,1,2.8,9
+54,"Les chevaux de bois",1896,1,5.4,21
+55,"Le chiffonnier",1896,1,4.1,18
+56,"Uma Corrida de Touros no Campo Pequeno",1896,1,3.5,12
+57,"Cortège de tzar allant à Versailles",1896,1,4.7,17
+58,"Cortège de tzar au Bois de Boulogne",1896,1,4.6,16
+59,"Couronnement de la rosière",1896,1,4,16
+60,"Dancing Darkies",1896,1,7.6,62
+61,"Dancing Girls",1896,1,4.1,14
+62,"Danse serpentine",1896,1,6.5,159
+63,"Dessinateur express",1896,1,3.9,15
+64,"Dessinateur: Chamberlain",1896,1,3.6,15
+65,"Dessinateur: Reine Victoria",1896,1,3.9,15
+66,"Dessinateur: Von Bismark",1896,1,3.9,15
+67,"Dix chapeaux en 60 secondes",1896,1,5.9,43
+68,"Déchargement de bateaux",1896,1,4.1,14
+69,"Défense d'afficher",1896,1,4.8,352
+70,"Démolition d'un mur",1896,1,6.4,2274
+71,"Départ des automobiles",1896,1,4,17
+72,"Départ des officiers",1896,1,4.5,16
+73,"Effets de mer sur les rochers",1896,1,4,14
+74,"Enfants jouant sur la plage",1896,1,4.5,17
+75,"Escamotage d'une dame au théâtre Robert Houdin",1896,1,6.3,1566
+76,"Exit of Rip and the Dwarf",1896,1,4.5,431
+77,"Le fakir, mystère indien",1896,1,5.1,20
+78,"Feira de Gado na Corujeira",1896,1,4.2,49
+79,"La gare Saint-Lazare",1896,1,4.6,19
+80,"Grandes manoeuvres",1896,1,4.3,15
+81,"Les haleurs de bateaux",1896,1,4.4,16
+82,"A Hard Wash",1896,1,4.8,25
+83,"Les indiscrets",1896,1,5,20
+84,"Les ivrognes",1896,1,4.7,17
+85,"Jardinier brûlant des herbes",1896,1,5.1,18
+86,"Jetée et plage de Trouville (1er partie)",1896,1,4.4,16
+87,"Jetée et plage de Trouville (2e partie)",1896,1,5,20
+88,"Jour de marché à Trouville",1896,1,5.1,17
+89,"Départ de Jérusalem en chemin de fer",1897,1,6.2,837
+90,"Libération des territoriaux",1896,1,4.4,16
+91,"Le manoir du diable",1896,3,6.7,2800
+92,"Marée montante sur Brise-Larmes",1896,3,4.9,14
+93,Melbourne,1896,3,4.9,66
+94,"Miss de Vere",1896,3,4.6,16
+95,"Le papier protée",1896,3,5,22
+96,"Place Saint-Augustin",1896,3,4.6,13
+97,"Place de l'Opéra, 1er aspect",1896,3,5.3,19
+98,"Place de l'Opéra, 2e aspect",1896,3,5.7,21
+99,"Place de la Bastille",1896,3,4.9,16
+100,"Place de la Concorde",1896,3,5.2,34
+101,"Place du théâtre français",1896,3,5.1,14

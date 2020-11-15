@@ -1,0 +1,101 @@
+userId,movieId,tag
+3,260,classic
+3,260,sci-fi
+4,1732,"dark comedy"
+4,1732,"great dialogue"
+4,7569,"so bad it's good"
+4,44665,"unreliable narrators"
+4,115569,tense
+4,115713,"artificial intelligence"
+4,115713,philosophical
+4,115713,tense
+4,148426,"so bad it's good"
+4,164909,cliche
+4,164909,musical
+4,168250,horror
+4,168250,unpredictable
+19,2160,"Oscar (Best Supporting Actress)"
+19,7099,adventure
+19,7099,anime
+19,7099,ecology
+19,7099,fantasy
+19,7099,"Hayao Miyazaki"
+19,7099,Miyazaki
+19,7099,post-apocalyptic
+20,1210,bah
+43,434,"Clint Eastwood"
+68,3481,music
+84,194728,art
+84,194728,"contemporary art"
+84,194728,documentary
+87,1127,aliens
+87,1127,"amazing photography"
+87,1127,"Director: James Cameron"
+87,1127,"first contact"
+87,1127,"James Cameron"
+87,1127,"Michael Biehn"
+87,1127,sci-fi
+87,6537,android(s)/cyborg(s)
+87,6537,apocalypse
+87,6537,"Arnold Schwarzenegger"
+87,6537,"artificial intelligence"
+87,6537,franchise
+87,6537,terminator
+87,6537,"time travel"
+87,72998,"James Cameron"
+87,72998,sci-fi
+87,72998,"science fiction"
+87,79132,sci-fi
+87,102445,"inferior sequel"
+87,102445,"setting:London (UK) (future)"
+87,102445,unoriginal
+87,104841,"bad science"
+87,109487,"good science"
+87,109487,"Hans Zimmer"
+87,109487,"philosophical issues"
+87,109487,sci-fi
+87,109487,"science fiction"
+87,109487,space
+87,109487,"space travel"
+87,109487,time-travel
+87,109487,"visually appealing"
+91,215,bittersweet
+91,215,boring
+91,215,conversation
+91,215,"dialogue driven"
+91,215,loneliness
+91,215,"love story"
+91,215,philosophical
+91,215,philosophy
+91,215,quirky
+91,215,reflective
+91,215,romantic
+91,215,thought-provoking
+91,215,Vienna
+91,215,wistful
+91,590,"American Civil War"
+91,590,"based on book"
+91,590,bittersweet
+91,590,"culture clash"
+91,590,drama
+91,590,indians
+91,590,"love story"
+91,590,war
+91,590,western
+91,1619,Buddhism
+91,1619,China
+91,1619,"great cinematography"
+91,1619,"JOURNEY OF SELF-DISCOVERY"
+91,1619,mountains
+91,1619,traveling
+91,1719,atmospheric
+91,1719,"based on a book"
+91,1719,Canada
+91,1719,death
+91,1719,Incest
+91,1719,meditative
+91,1719,melancholic
+91,1719,"Nudity (Full Frontal)"
+91,1719,"small town"
+91,1719,wintry
+91,1962,aging
