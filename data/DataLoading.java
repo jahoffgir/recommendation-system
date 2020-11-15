@@ -316,11 +316,13 @@ public class DataLoading {
                 ps.executeBatch();
                 conn.commit();
             }
-            ps.close();
-            stmt.close();
-            conn.close();
-            scanner.close();
+
+
         }
+        ps.close();
+        stmt.close();
+        conn.close();
+        scanner.close();
     }
 
        /**
@@ -379,7 +381,8 @@ public class DataLoading {
 
             try {
                 conn = DriverManager.getConnection(url, user, pwd);
-
+                Statement stmt = conn.createStatement();
+                stmt.executeUpdate("USE recommend");
                 acted_table = conn.prepareStatement("CREATE TABLE IF NOT EXISTS movie_actor(actor int NOT NULL, " +
                         "imdbMovie int NOT NULL, PRIMARY KEY (actor,imdbMovie), FOREIGN KEY(actor) REFERENCES member(id)," +
                         "FOREIGN KEY(imdbMovie) REFERENCES imdbMovie(imdbId))");
@@ -455,7 +458,8 @@ public class DataLoading {
 
             try {
                 conn = DriverManager.getConnection(url, user, pwd);
-
+                Statement stmt = conn.createStatement();
+                stmt.executeUpdate("USE recommend");
                 director = conn.prepareStatement("CREATE TABLE IF NOT EXISTS movie_director(director int " +
                         "NOT NULL, imdbId int NOT NULL, PRIMARY KEY(director,imdbId), FOREIGN KEY (director) REFERENCES " +
                         "member(id), FOREIGN KEY (movie) REFERENCES imdbMovie(imdbId))");
@@ -528,7 +532,8 @@ public class DataLoading {
 
             try {
                 conn = DriverManager.getConnection(url, user, pwd);
-
+                Statement stmt = conn.createStatement();
+                stmt.executeUpdate("USE recommend");
                 writer = conn.prepareStatement("CREATE TABLE IF NOT EXISTS movie_writer(writer int NOT NULL,"
                         + " imdbMovie int NOT NULL, PRIMARY KEY(writer,imdbMovie), FOREIGN KEY (writer) REFERENCES person(personID)" +
                         ", FOREIGN KEY (imdbMovie) REFERENCES imdbMovie(imdbId))");
@@ -600,7 +605,8 @@ public class DataLoading {
 
             try {
                 conn = DriverManager.getConnection(url, user, pwd);
-
+                Statement stmt = conn.createStatement();
+                stmt.executeUpdate("USE recommend");
                 member_roles = conn.prepareStatement("CREATE TABLE IF NOT EXISTS role(id " +
                         "INT PRIMARY KEY NOT NULL, role TEXT)");
                 member_roles.execute();
@@ -660,7 +666,8 @@ public class DataLoading {
 
             try {
                 conn = DriverManager.getConnection(url, user, pwd);
-
+                Statement stmt = conn.createStatement();
+                stmt.executeUpdate("USE recommend");
                 movie_acted_role_table = conn.prepareStatement("CREATE TABLE IF NOT EXISTS movie_actor_role(actor "
                         + "int NOT NULL, imdbMovie int NOT NULL, role int NOT NULL, PRIMARY KEY (actor,movie,role), FOREIGN " +
                         "KEY (actor) REFERENCES person(personID), FOREIGN KEY(movie) REFERENCES imdbMovie(imdbId), FOREIGN KEY(role) " +
