@@ -45,12 +45,11 @@ public class DataLoading {
         insertPersonTable();
         insertMovieTable();
         insertRatings();
-        actorMovieRole_table();
-        role_table();
-        written_table();
-        directed_table();
-        movieActor_table();
-
+//        actorMovieRole_table();
+//        role_table();
+//        written_table();
+//        directed_table();
+//        movieActor_table();
     }
 
     /**
