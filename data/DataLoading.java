@@ -45,11 +45,9 @@ public class DataLoading {
         insertPersonTable();
         insertMovieTable();
         insertRatings();
-//        actorMovieRole_table();
-//        role_table();
-//        written_table();
-//        directed_table();
-//        movieActor_table();
+        movieActor_table();
+        directed_table();
+        written_table();
     }
 
     /**
@@ -115,10 +113,30 @@ public class DataLoading {
         ps = conn.prepareStatement(linksTable);
         ps.executeUpdate(linksTable);
 
+        //
+
+        String acted_table = "CREATE TABLE IF NOT EXISTS movie_actor(actor int NOT NULL, " +
+                "imdbMovie int NOT NULL, PRIMARY KEY (actor,imdbMovie), FOREIGN KEY(actor) REFERENCES person(personID)," +
+                "FOREIGN KEY(imdbMovie) REFERENCES imdbMovie(imdbId))";
+        ps = conn.prepareStatement(acted_table);
+        ps.executeUpdate(acted_table);
+//        System.out.println("Creating Movie_Actor Table");
+
+        String movie_director = "CREATE TABLE IF NOT EXISTS movie_director(director int " +
+                "NOT NULL, imdbMovie int NOT NULL, PRIMARY KEY(director,imdbMovie), FOREIGN KEY (director) REFERENCES " +
+                "person(personID), FOREIGN KEY (imdbMovie) REFERENCES imdbMovie(imdbId))";
+        ps = conn.prepareStatement(movie_director);
+        ps.executeUpdate(movie_director);
+
+        String movie_writer = "CREATE TABLE IF NOT EXISTS movie_writer(writer int NOT NULL,"
+                + " imdbMovie int NOT NULL, PRIMARY KEY(writer,imdbMovie), FOREIGN KEY (writer) REFERENCES person(personID)" +
+                ", FOREIGN KEY (imdbMovie) REFERENCES imdbMovie(imdbId))";
+        ps = conn.prepareStatement(movie_writer);
+        ps.executeUpdate(movie_writer);
+
         // Closing Connection
         ps.close();
         conn.close();
-
     }
 
     /**
@@ -368,226 +386,146 @@ public class DataLoading {
     /**
      * This method adds every actor with the movie he/she worked in
      */
-    public static void movieActor_table () {
-            PreparedStatement acted_table;
-            PreparedStatement acted_insert;
-            int header = 0;
-            String[] val;
-            String value;
-            String value2;
-            String value3;
-            String pattern = "(?<=^..)(.*)";
+    public static void movieActor_table() throws Exception {
+        Connection conn = DriverManager.getConnection(url, user, pwd);
+        Statement stmt = conn.createStatement();
+        stmt.executeUpdate("USE recommend");
+        String query = "INSERT IGNORE INTO movie_actor(actor,imdbMovie) SELECT " +
+                "person.personID, imdbMovie.imdbId from person,imdbMovie where person.personID = ? and imdbMovie.imdbId = ? ";
+        PreparedStatement ps = conn.prepareStatement(query);
+        int count = 0;
+        int totalcount = 1;
+        boolean flag = false;
+        InputStream principals_file = new GZIPInputStream(new FileInputStream("title.principals.tsv.gz"));
+        Scanner scanner = new Scanner(new InputStreamReader(principals_file));
+        System.out.println("Reading title.principals.tsv.gz file");
 
-            try {
-                conn = DriverManager.getConnection(url, user, pwd);
-                Statement stmt = conn.createStatement();
-                stmt.executeUpdate("USE recommend");
-                acted_table = conn.prepareStatement("CREATE TABLE IF NOT EXISTS movie_actor(actor int NOT NULL, " +
-                        "imdbMovie int NOT NULL, PRIMARY KEY (actor,imdbMovie), FOREIGN KEY(actor) REFERENCES member(id)," +
-                        "FOREIGN KEY(imdbMovie) REFERENCES imdbMovie(imdbId))");
-                acted_table.execute();
-                System.out.println("Creating Movie_Actor Table");
-
-                acted_insert = conn.prepareStatement("INSERT INTO movie_actor(actor,imdbMovie) SELECT " +
-                        "person.personID, imdbMovie.imdbId from person,imdbMovie where person.personID = ? and imdbMovie.imdbId = ? ON CONFLICT " +
-                        "(actor,imdbMovie) DO NOTHING");
-
-                InputStream principals_file = new GZIPInputStream(new FileInputStream("title.principals.tsv.gz"));
-                BufferedReader title_principals_read = new BufferedReader(new InputStreamReader(principals_file));
-                System.out.println("Reading title.principals.tsv.gz file");
-
-                conn.setAutoCommit(false); // default true
-
-                while (title_principals_read.readLine() != null) {
-                    String line = title_principals_read.readLine();
-
-                    if (header == 0) {
-                        header++;
-                        continue;
-                    }
-
-                    if (line == null) {
-                        continue;
-                    }
-
-                    val = line.split("\t");
-                    Pattern r = Pattern.compile(pattern);
-                    Matcher m = r.matcher(val[0]);
-                    Matcher n = r.matcher(val[2]);
-                    value2 = val[3];
-
-                    if (value2.equals("actor") | value2.equals("actress")) {
-                        if (m.find() && n.find()) {
-                            value = m.group(1);
-                            acted_insert.setInt(1, Integer.parseInt(value));
-                            value3 = n.group(1);
-                            acted_insert.setInt(2, Integer.parseInt(value3));
-                        } else {
-                            continue;
-                        }
-                    } else {
-                        continue;
-                    }
-
-                    acted_insert.addBatch();
-                    if (++header % 100000 == 0) {
-                        acted_insert.executeBatch();
-                    }
+        conn.setAutoCommit(false); // default true
+        scanner.nextLine();
+        while (scanner.hasNextLine() && flag == false) {
+            String[] arrofStr = scanner.nextLine().split("\\t");
+            if (arrofStr[3].equals("actor") | arrofStr[3].equals("actress")) {
+                // personID
+                ps.setInt(1, Integer.parseInt(arrofStr[2].replace("nm", "")));
+                // imdbID
+                ps.setInt(2, Integer.parseInt(arrofStr[0].replace("tt", "")));
+                count++;
+                totalcount++;
+                ps.addBatch();
+                if (count % 100000 == 0) {
+                    ps.executeBatch();
+                    conn.commit();
+                    count = 0;
                 }
-                acted_insert.executeBatch();
-                conn.commit();
-                System.out.println("Acted Table Inserted");
-            } catch (SQLException | NullPointerException | IOException e) {
-                e.printStackTrace();
+                //    }
+                if (totalcount == 1000000) {
+                    flag = true;
+                    break;
+                }
             }
         }
+        scanner.close();
+        ps.close();
+        conn.close();
+        System.out.println("Acted Table Inserted");
+    }
 
     /**
      * This method loads data for every director who has
      * directed respective movies
      */
-    public static void directed_table () {
-            PreparedStatement director;
-            PreparedStatement directed_insert;
-            int header = 0;
-            String[] val;
-            String value2;
-            String value3;
-            String pattern = "(?<=^..)(.*)";
+    public static void directed_table() throws Exception {
+        Connection conn = DriverManager.getConnection(url, user, pwd);
+        Statement stmt = conn.createStatement();
+        stmt.executeUpdate("USE recommend");
 
-            try {
-                conn = DriverManager.getConnection(url, user, pwd);
-                Statement stmt = conn.createStatement();
-                stmt.executeUpdate("USE recommend");
-                director = conn.prepareStatement("CREATE TABLE IF NOT EXISTS movie_director(director int " +
-                        "NOT NULL, imdbId int NOT NULL, PRIMARY KEY(director,imdbId), FOREIGN KEY (director) REFERENCES " +
-                        "member(id), FOREIGN KEY (movie) REFERENCES imdbMovie(imdbId))");
-                director.execute();
-                System.out.println("Creating Movie_Director Table");
+        String query = "INSERT IGNORE INTO movie_director(director,imdbMovie) SELECT " +
+                "person.personID, imdbMovie.imdbId from person,imdbMovie where person.personID = ? and imdbMovie.imdbId = ?";
+        PreparedStatement ps = conn.prepareStatement(query);
 
-                directed_insert = conn.prepareStatement("INSERT INTO movie_director(director,imdbId) SELECT " +
-                        "person.personID, imdbMovie.imdbId from person,imdbMovie where person.personID = ? and imdbMovie.imdbId = ? ON CONFLICT " +
-                        "(director,imdbMovie) DO NOTHING");
-
-                InputStream principals_file = new GZIPInputStream(new FileInputStream(
-                        "title.principals.tsv.gz"));
-                BufferedReader title_principals_read = new BufferedReader(new InputStreamReader(principals_file));
-                System.out.println("Reading title.principals.tsv.gz file");
-                conn.setAutoCommit(false); // default true
-                while (title_principals_read.readLine() != null) {
-                    String line = title_principals_read.readLine();
-                    //System.out.println(line);
-                    if (header == 0) {
-                        header++;
-                        continue;
-                    }
-                    if (line == null) {
-                        continue;
-                    }
-                    val = line.split("\t");
-                    Pattern r = Pattern.compile(pattern);
-                    Matcher m = r.matcher(val[0]);
-                    Matcher n = r.matcher(val[2]);
-                    value2 = val[3];
-
-                    if (value2.equals("director")) {
-                        if (m.find() && n.find()) {
-                            value2 = m.group(1);
-                            directed_insert.setInt(1, Integer.parseInt(value2));
-                            value3 = n.group(1);
-                            directed_insert.setInt(2, Integer.parseInt(value3));
-                        } else {
-                            continue;
-                        }
-                    } else {
-                        continue;
-                    }
-
-                    directed_insert.addBatch();
-                    if (++header % 100000 == 0) {
-                        directed_insert.executeBatch();
-                    }
+        int count = 0;
+        int totalcount = 1;
+        boolean flag = false;
+        InputStream principals_file = new GZIPInputStream(new FileInputStream(
+                "title.principals.tsv.gz"));
+        Scanner scanner = new Scanner(new InputStreamReader(principals_file));
+        System.out.println("Reading title.principals.tsv.gz file");
+        conn.setAutoCommit(false); // default true
+        scanner.nextLine();
+        while (scanner.hasNextLine() && flag == false) {
+            String[] arrofStr = scanner.nextLine().split("\\t");
+            if (arrofStr[3].equals("director")) {
+                ps.setInt(1, Integer.parseInt(arrofStr[2].replace("nm", "")));
+                ps.setInt(2, Integer.parseInt(arrofStr[0].replace("tt", "")));
+                count++;
+                totalcount++;
+                ps.addBatch();
+                if (count % 100000 == 0) {
+                    ps.executeBatch();
+                    conn.commit();
+                    count = 0;
                 }
-                directed_insert.executeBatch();
-                conn.commit();
-                System.out.println("Directed Table Inserted");
-            } catch (SQLException | NullPointerException | IOException e) {
-                e.printStackTrace();
+                if (totalcount == 1000000) {
+                    flag = true;
+                    break;
+                }
             }
+
         }
+        scanner.close();
+        ps.close();
+        conn.close();
+        System.out.println("Directed Table Inserted");
+    }
 
     /**
      * This method loads data for every writer who has
      * written respective movies
      */
-        public static void written_table () {
-            PreparedStatement writer;
-            PreparedStatement written_insert;
-            int header = 0;
-            String[] val;
-            String value2;
-            String value3;
-            String pattern = "(?<=^..)(.*)";
+    public static void written_table () throws Exception {
+        Connection conn = DriverManager.getConnection(url, user, pwd);
+        Statement stmt = conn.createStatement();
+        stmt.executeUpdate("USE recommend");
 
-            try {
-                conn = DriverManager.getConnection(url, user, pwd);
-                Statement stmt = conn.createStatement();
-                stmt.executeUpdate("USE recommend");
-                writer = conn.prepareStatement("CREATE TABLE IF NOT EXISTS movie_writer(writer int NOT NULL,"
-                        + " imdbMovie int NOT NULL, PRIMARY KEY(writer,imdbMovie), FOREIGN KEY (writer) REFERENCES person(personID)" +
-                        ", FOREIGN KEY (imdbMovie) REFERENCES imdbMovie(imdbId))");
-                writer.execute();
-                System.out.println("Creating Movie_Writer Table");
+        String query = "INSERT IGNORE INTO movie_writer(writer,ImdbMovie) SELECT " +
+                "person.personID, imdbMovie.imdbId from person,ImdbMovie where person.personID = ? and ImdbMovie.imdbId = ?";
+        PreparedStatement ps = conn.prepareStatement(query);
 
-                written_insert = conn.prepareStatement("INSERT INTO movie_writer(writer,ImdbMovie) SELECT " +
-                        "person.personID, imdbMovie.imdbId from person,ImdbMovie where person.personID = ? and ImdbMovie.imdbId = ? ON CONFLICT " +
-                        "(writer,imdbMovie) DO NOTHING");
+        InputStream principals_file = new GZIPInputStream(new FileInputStream("title.principals.tsv.gz"));
+        Scanner scanner = new Scanner(new InputStreamReader(principals_file));
 
-                InputStream principals_file = new GZIPInputStream(new FileInputStream("title.principals.tsv.gz"));
-                BufferedReader title_principals_read = new BufferedReader(new InputStreamReader(principals_file));
-                System.out.println("Reading title.principals.tsv.gz file");
-                conn.setAutoCommit(false); // default true
-                while (title_principals_read.readLine() != null) {
-                    String line = title_principals_read.readLine();
-                    //System.out.println(line);
-                    if (header == 0) {
-                        header++;
-                        continue;
-                    }
-                    if (line == null) {
-                        continue;
-                    }
-                    val = line.split("\t");
-                    Pattern r = Pattern.compile(pattern);
-                    Matcher m = r.matcher(val[0]);
-                    Matcher n = r.matcher(val[2]);
-                    value2 = val[3];
-
-                    if (value2.equals("writer")) {
-                        if (m.find() && n.find()) {
-                            value2 = m.group(1);
-                            written_insert.setInt(1, Integer.parseInt(value2));
-                            value3 = n.group(1);
-                            written_insert.setInt(2, Integer.parseInt(value3));
-                        } else {
-                            continue;
-                        }
-                    } else {
-                        continue;
-                    }
-
-                    written_insert.addBatch();
-                    if (++header % 100000 == 0) {
-                        written_insert.executeBatch();
-                    }
+        System.out.println("Reading title.principals.tsv.gz file");
+        conn.setAutoCommit(false); // default true
+        int count = 0;
+        int totalcount = 1;
+        boolean flag = false;
+        scanner.nextLine();
+        while (scanner.hasNextLine() && flag == false) {
+            String[] arrofStr = scanner.nextLine().split("\\t");
+            if (arrofStr[3].equals("writer")) {
+                ps.setInt(1, Integer.parseInt(arrofStr[2].replace("nm", "")));
+                ps.setInt(2, Integer.parseInt(arrofStr[0].replace("tt", "")));
+                count++;
+                totalcount++;
+                ps.addBatch();
+                if (count % 100000 == 0) {
+                    ps.executeBatch();
+                    conn.commit();
+                    count = 0;
                 }
-                written_insert.executeBatch();
-                conn.commit();
-                System.out.println("Written Table Inserted");
-            } catch (SQLException | NullPointerException | IOException e) {
-                e.printStackTrace();
+                //    }
+                if (totalcount == 1000000) {
+                    flag = true;
+                    break;
+                }
             }
         }
+        scanner.close();
+        ps.close();
+        conn.close();
+
+        System.out.println("Written Table Inserted");
+    }
 
     /**
      * This method loads data for every unique role
