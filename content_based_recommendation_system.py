@@ -71,10 +71,9 @@ class ContentBasedRecommendationSystem:
         :param movieId: movie title
         :return: movieId
         """
-        print('get', self.movies[self.movies.title == title]['movieId'])
-        print('get', self.movies[self.movies.title == title])
-        # print('get', self.movies[self.movies.title == title]['movieId'].values[0])
-        return self.movies[self.movies.title == title]['movieId'].values[0]
+        for index, row in self.movies.iterrows():
+            if row['title'] == title:
+                return index
 
     def train(self):
         """
@@ -84,15 +83,18 @@ class ContentBasedRecommendationSystem:
         for attribute in ['title', 'genres', 'actorName', 'directorName']:
             self.movies[attribute] = self.movies[attribute]
         self.movies['merged'] = self.movies.apply(self.merge, axis=1)
-        print('merged', self.movies)
         count_vectorized = cv()
         cs = cosine_similarity(count_vectorized.fit_transform(self.movies['merged']))
         recommended_movies = list(enumerate(cs[self.get_movie_id(self.watched_movie)]))
 
         if recommended_movies:
             predicted = self.get_highest(recommended_movies)
-            print('predicted', predicted)
-            print('predict', self.get_movie_title(predicted[0]))
+            for i, row in self.movies.iterrows():
+                if predicted[0] == i:
+                    print('\nSince you\'ve liked', self.watched_movie, 'We recommend: ', row['title'], 'genres:', row['genres'])
+                if i == 999:
+                    print(self.watched_movie, 'movie\'s genre:', row['genres'])
+                    print()
 
         else:
             print('Something went wrong with the analysis')
@@ -125,29 +127,9 @@ class ContentBasedRecommendationSystem:
 
 def main():
     mysql = MySQL()
-    content_based = ContentBasedRecommendationSystem('Toy Story (1995)', mysql)
+    content_based = ContentBasedRecommendationSystem('Iron Man (1931)', mysql)
     content_based.train()
 
 
 if __name__ == '__main__':
     main()
-
-    # print(content_based.movies.head(10)['title'])
-    # print(content_based.get_movie_id('Father of the Bride Part II (1995)'))
-    # print(content_based.movies[content_based.movies.movieId == 5])
-    # print(content_based.read_table("""
-    #     SELECT *
-    #     FROM movie_actor JOIN
-    #         (
-    #             SELECT lenslinks.movieId, title, genres, imdbId
-    #             FROM movielenstable JOIN lenslinks ON movielenstable.movieId = lenslinks.movieId
-    #         ) AS subb
-    #     ON imdbId = subb.imdbId;
-    # """))
-
-    # print(content_based.read_table("""
-    #
-    #         SELECT lenslinks.movieId, title, genres, imdbId
-    #         FROM movielenstable JOIN lenslinks ON movielenstable.movieId = lenslinks.movieId
-    #
-    # """).columns)

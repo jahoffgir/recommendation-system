@@ -29,7 +29,7 @@ class UserUserCollaborativeSystem:
         self.algorithm.fit(self.ratings)
 
     def __del__(self):
-        print("Closing db connection")
+        print("\nClosing db connection")
         self.connection.close()
 
     def train(self, pref_one, pref_two, num_movies_rec=10):
@@ -60,7 +60,9 @@ class UserUserCollaborativeSystem:
         for i in range(len(result.head(num_movies_rec))):
             recommended_movies.append((result.iloc[i, 1], result.iloc[i, 0]))
 
-        print(recommended_movies)
+        print('\nTop 10 movies recommend for Person One and Two based on their watch history and rating')
+        for movie in recommended_movies:
+            print(movie[0], 'genres', movie[1])
 
     def read_table(self, query):
         """
@@ -70,19 +72,6 @@ class UserUserCollaborativeSystem:
         """
         if self.connection.is_connected():
             return pd.read_sql_query(query, self.connection)
-
-    def generic_movies(self, votes=20):
-        """
-        Gives generic movies based on other user ratings
-        :return: generic movies
-        """
-        ratings_mean = self.ratings.groupby(['item']).mean()
-        ratings_count = self.ratings.groupby(['item']).count()
-        ratings_mean = ratings_mean.loc[ratings_count['rating'] > votes]
-        ratings_mean = ratings_mean.sort_values(by="rating", ascending=False)
-        merged = ratings_mean.join(self.movies['genres'], on='item')
-        merged = merged.join(self.movies['title'], on='item')
-        return merged[merged.columns[3:]].dropna()
 
 
 def main():
