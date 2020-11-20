@@ -14,18 +14,6 @@ class ContentBasedRecommendationSystem:
         self.watched_movie = watched_movie
         self.mysql = mysql
         self.connection = mysql.get_connection()
-        # self.movies = self.read_table(
-        #     """
-        #     SELECT movielenstable.movieId, title, genres, tags.tag
-        #     FROM movielenstable JOIN
-        #         (
-        #             SELECT movieId, GROUP_CONCAT(tag SEPARATOR '|') AS tag
-        #             FROM lenstags
-        #             GROUP BY movieId
-        #         ) AS tags
-        #     ON movielenstable.movieId = tags.movieId;
-        #     """
-        # )
         self.movies = self.read_table(
             """
             SELECT lenslinks.movieId, title, genres, imdbId
@@ -78,7 +66,6 @@ class ContentBasedRecommendationSystem:
     def train(self):
         """
         Trains the model based on movies; title, genres, tag
-        :return:
         """
         for attribute in ['title', 'genres', 'actorName', 'directorName']:
             self.movies[attribute] = self.movies[attribute]
@@ -90,12 +77,13 @@ class ContentBasedRecommendationSystem:
         if recommended_movies:
             predicted = self.get_highest(recommended_movies)
             for i, row in self.movies.iterrows():
+
                 if predicted[0] == i:
                     print('\nSince you\'ve liked', self.watched_movie, 'We recommend: ', row['title'], 'genres:', row['genres'])
+                    print('Accuracy', predicted[1])
                 if i == 999:
                     print(self.watched_movie, 'movie\'s genre:', row['genres'])
                     print()
-
         else:
             print('Something went wrong with the analysis')
 

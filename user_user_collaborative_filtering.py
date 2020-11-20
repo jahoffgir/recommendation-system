@@ -32,15 +32,13 @@ class UserUserCollaborativeSystem:
         print("\nClosing db connection")
         self.connection.close()
 
-    def train(self, pref_one, pref_two, num_movies_rec=10):
+    def merge(self, pref_one, pref_two):
         """
-        Trains the UserUser model based on the two preferences that people rated
-        :param pref_one: rating of movies for person one
-        :param pref_two: rating of movies for person two
-        :param num_movies_rec: number of movies to recommend
-        :return: returns the recommended movies
+        Merges two dictionaries into one
+        :param pref_one: preference one
+        :param pref_two: preference two
+        :return: merged preference
         """
-        # TODO Refactor
         merged = {}
         for k in pref_one:
             if k in pref_two:
@@ -50,6 +48,17 @@ class UserUserCollaborativeSystem:
         for k in pref_two:
             if k not in merged:
                 merged.update({k: pref_two[k]})
+        return merged
+
+    def train(self, pref_one, pref_two, num_movies_rec=10):
+        """
+        Trains the UserUser model based on the two preferences that people rated
+        :param pref_one: rating of movies for person one
+        :param pref_two: rating of movies for person two
+        :param num_movies_rec: number of movies to recommend
+        :return: returns the recommended movies
+        """
+        merged = self.merge(pref_one, pref_two)
 
         recommendation = self.algorithm.recommend(-1, 50, ratings=pd.Series(merged))
         result = recommendation.join(self.movies['genres'], on='item')
@@ -80,18 +89,13 @@ def main():
 
     person_one, person_two = {}, {}
 
-    # TODO Refactor
     with open("data/user_preferences/person1.csv", newline='') as csvfile:
-        ratings_reader = csv.DictReader(csvfile)
-        for row in ratings_reader:
-            if ((row['ratings'] != "") and (float(row['ratings']) > 0) and (float(row['ratings']) < 6)):
-                person_one.update({int(row['item']): float(row['ratings'])})
+        for row in csv.DictReader(csvfile):
+            person_one.update({int(row['item']): float(row['ratings'])})
 
     with open("data/user_preferences/person2.csv", newline='') as csvfile:
-        ratings_reader = csv.DictReader(csvfile)
-        for row in ratings_reader:
-            if ((row['ratings'] != "") and (float(row['ratings']) > 0) and (float(row['ratings']) < 6)):
-                person_two.update({int(row['item']): float(row['ratings'])})
+        for row in csv.DictReader(csvfile):
+            person_two.update({int(row['item']): float(row['ratings'])})
 
     user_user.train(person_one, person_two)
 
